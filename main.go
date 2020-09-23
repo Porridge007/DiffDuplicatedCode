@@ -23,9 +23,12 @@ func init() {
 		os.Exit(1)
 	}
 	kline := viper.Get("kline").(string)
+	if strings.Trim(kline," ") == ""{
+		panic("No kline field in conf.json")
+	}
 	// 特性： 屏蔽路径有无“/”差异
 	if strings.HasSuffix(kline, "/") == false {
-		kline = kline + "/"
+		kline = kline + string(os.PathSeparator)
 	}
 	path1 = kline + "fundAndBond/bfq/"
 	path2 = kline + "stockAndIndex/bfq/"
@@ -62,7 +65,10 @@ func main() {
 // 读取指定目录下，所有文件名
 func GetFilename(path string) []string {
 	nameList := make([]string, 0)
-	files, _ := ioutil.ReadDir(path)
+	files, err := ioutil.ReadDir(path)
+	if err!= nil{
+		panic("Cannot Get FileNames Under the Given Dir")
+	}
 	for _, f := range files {
 		nameList = append(nameList, f.Name())
 	}
@@ -114,6 +120,7 @@ func DeleteCodeUponLevel(level string, codes []string)  {
 	for _, code := range codes {
 		if err := os.Remove(path1 + level + code); err !=nil {
 			fmt.Println("Remove the duplicated code:", code ," failure:", err)
+			return
 		}
 	}
 }
