@@ -28,7 +28,7 @@ func init() {
 	}
 	// 特性： 屏蔽路径有无“/”差异
 	if strings.HasSuffix(kline, "/") == false {
-		kline = kline + string(os.PathSeparator)
+		kline = kline + "/"
 	}
 	path1 = kline + "fundAndBond/bfq/"
 	path2 = kline + "stockAndIndex/bfq/"
@@ -118,7 +118,7 @@ func WriteLog(level string, codes []string) {
 // 同级别 把基金债券底下重复的代码删除
 func DeleteCodeUponLevel(level string, codes []string)  {
 	for _, code := range codes {
-		if err := os.Remove(path1 + level + code); err !=nil {
+		if err := os.Remove(path1 + level + "/" + code); err !=nil {
 			fmt.Println("Remove the duplicated code:", code ," failure:", err)
 			return
 		}
